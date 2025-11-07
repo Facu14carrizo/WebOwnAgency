@@ -1,7 +1,8 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Points, PointMaterial } from '@react-three/drei';
+import { Points, PointMaterial, Float } from '@react-three/drei';
 import * as THREE from 'three';
+import gsap from 'gsap';
 
 function CameraController() {
   useFrame((state) => {
@@ -91,17 +92,55 @@ function GeometricShape({ position, type }: { position: [number, number, number]
 }
 
 export default function SpaceScene() {
+  const groupRef = useRef<THREE.Group>(null);
+  const lightARef = useRef<THREE.PointLight>(null);
+  const lightBRef = useRef<THREE.PointLight>(null);
+
+  useEffect(() => {
+    if (!groupRef.current) return;
+    const tl = gsap.timeline();
+    tl.fromTo(
+      groupRef.current.scale,
+      { x: 0.85, y: 0.85, z: 0.85 },
+      { x: 1, y: 1, z: 1, duration: 1.4, ease: 'power3.out' }
+    );
+    tl.fromTo(
+      groupRef.current.rotation,
+      { y: -0.3 },
+      { y: 0, duration: 1.2, ease: 'power2.out' },
+      '<'
+    );
+    if (lightARef.current) gsap.fromTo(lightARef.current, { intensity: 0 }, { intensity: 1, duration: 1.2, ease: 'sine.out' });
+    if (lightBRef.current) gsap.fromTo(lightBRef.current, { intensity: 0 }, { intensity: 1, duration: 1.2, ease: 'sine.out', delay: 0.2 });
+  }, []);
+
+  useFrame((state) => {
+    if (!groupRef.current) return;
+    const targetX = state.mouse.x * 20;
+    const targetY = -state.mouse.y * 10;
+    groupRef.current.position.x += (targetX - groupRef.current.position.x) * 0.05;
+    groupRef.current.position.y += (targetY - groupRef.current.position.y) * 0.05;
+  });
+
   return (
     <div className="absolute inset-0 z-1">
       <Canvas camera={{ position: [0, 0, 500], fov: 75 }}>
         <CameraController />
         <ambientLight intensity={0.5} />
-        <pointLight position={[200, 200, 200]} color="#00ff88" intensity={1} />
-        <pointLight position={[-200, -200, 200]} color="#ff00ff" intensity={1} />
-        <Particles />
-        <GeometricShape position={[-200, 100, 0]} type="torus" />
-        <GeometricShape position={[200, -100, 0]} type="icosahedron" />
-        <GeometricShape position={[0, 150, 0]} type="octahedron" />
+        <pointLight ref={lightARef} position={[200, 200, 200]} color="#00ff88" intensity={1} />
+        <pointLight ref={lightBRef} position={[-200, -200, 200]} color="#ff00ff" intensity={1} />
+        <group ref={groupRef}>
+          <Particles />
+          <Float speed={1.2} rotationIntensity={0.6} floatIntensity={1.2}>
+            <GeometricShape position={[-200, 100, 0]} type="torus" />
+          </Float>
+          <Float speed={1.0} rotationIntensity={0.7} floatIntensity={1.0}>
+            <GeometricShape position={[200, -100, 0]} type="icosahedron" />
+          </Float>
+          <Float speed={1.4} rotationIntensity={0.5} floatIntensity={1.5}>
+            <GeometricShape position={[0, 150, 0]} type="octahedron" />
+          </Float>
+        </group>
       </Canvas>
     </div>
   );

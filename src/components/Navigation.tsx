@@ -30,7 +30,7 @@ export default function Navigation() {
           onClick={() => scrollToSection('home')}
           className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent cursor-pointer"
         >
-          NK
+          WaveFrame
         </button>
         <ul className="hidden md:flex gap-12 list-none">
           {['Inicio', 'Sobre Nosotros', 'Proyectos', 'Contacto'].map((item, index) => (

@@ -89,12 +89,16 @@ export default function Contact() {
     <section className="max-w-[950px] mx-auto px-4 py-20" id="contacto">
       {/* Sidebar Drawer Form */}
       {showForm && (
-        <div className="fixed z-[9999] inset-0 flex">
-          {/* Overlay */}
-          <div ref={overlayRef} className="bg-black/60 flex-1" onClick={() => setShowForm(false)} />
-          {/* Sidebar */}
-          <div ref={sidebarRef} className="w-full max-w-md sm:w-[430px] h-screen pt-16 bg-[#15181b] border-l border-white/10 shadow-2xl pb-8 px-7 relative overflow-y-auto">
-            <button className="absolute top-4 right-4 text-gray-400 hover:text-primary" onClick={() => setShowForm(false)}>
+        <div className="fixed z-[9999] inset-0 flex flex-col md:flex-row">
+          {/* Overlay - solo visible en desktop */}
+          <div ref={overlayRef} className="hidden md:flex bg-black/60 flex-1" onClick={() => setShowForm(false)} />
+          {/* Sidebar - full width en móvil, ancho fijo en desktop */}
+          <div ref={sidebarRef} className="w-full md:w-[430px] md:max-w-md h-screen pt-16 bg-[#15181b] md:border-l border-white/10 shadow-2xl pb-8 px-4 sm:px-7 relative overflow-y-auto">
+            <button 
+              className="absolute top-4 right-4 text-white hover:text-primary bg-white/10 hover:bg-white/20 p-2 rounded-lg transition-colors z-10 active:scale-95" 
+              onClick={() => setShowForm(false)}
+              aria-label="Cerrar formulario"
+            >
               <X className="w-6 h-6" />
             </button>
             <h2 className="text-xl font-bold mb-6">Contanos sobre tu proyecto</h2>

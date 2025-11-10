@@ -54,12 +54,12 @@ export default function Hero() {
   };
 
   return (
-    <section ref={sectionRef} id="home" className="h-screen relative flex items-center justify-center overflow-hidden pt-24 md:pt-0">
+    <section ref={sectionRef} id="home" className="min-h-screen relative flex items-center justify-center overflow-hidden pt-20 md:pt-0 pb-12 md:pb-0">
       <div className="absolute inset-0 z-0"><SpaceScene /></div>
-      <div className="relative z-10 text-center px-8 max-w-6xl mx-auto">
+      <div className="relative z-10 text-center px-4 sm:px-8 max-w-6xl mx-auto">
         <h1
           ref={titleRef}
-          className="text-4xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-tight mb-6 md:mb-8"
+          className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-tight mb-4 sm:mb-6 md:mb-8"
         >
           Creamos
           <br />
@@ -69,7 +69,7 @@ export default function Hero() {
         </h1>
         <p
           ref={subtitleRef}
-          className="text-lg md:text-xl text-gray-400 mb-8 md:mb-12"
+          className="text-base sm:text-lg md:text-xl text-gray-400 mb-6 sm:mb-8 md:mb-12 px-4"
         >
           Diseño innovador y desarrollo web de vanguardia
         </p>
@@ -80,7 +80,7 @@ export default function Hero() {
             e.preventDefault();
             scrollToProjects();
           }}
-          className="inline-block px-12 py-4 bg-gradient-to-r from-primary to-secondary text-dark font-semibold rounded-full transition-all duration-300 hover:translate-y-[-3px] hover:shadow-[0_20px_40px_rgba(0,255,136,0.3)]"
+          className="inline-block px-8 sm:px-12 py-3 sm:py-4 bg-gradient-to-r from-primary to-secondary text-dark font-semibold rounded-full transition-all duration-300 hover:translate-y-[-3px] hover:shadow-[0_20px_40px_rgba(0,255,136,0.3)] text-sm sm:text-base active:scale-95"
         >
           Ver Proyectos
         </a>

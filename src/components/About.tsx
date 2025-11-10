@@ -170,14 +170,14 @@ export default function About() {
   ];
 
   return (
-    <section ref={sectionRef} id="about" className="py-32 px-8 md:px-16 max-w-[1400px] mx-auto relative" style={{ backgroundPosition: '50% 0%' }}>
+    <section ref={sectionRef} id="about" className="py-20 md:py-32 px-4 sm:px-8 md:px-16 max-w-[1400px] mx-auto relative" style={{ backgroundPosition: '50% 0%' }}>
       <h2
         ref={titleRef}
-        className="text-5xl md:text-6xl font-bold mb-12"
+        className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 md:mb-12 text-center"
       >
         Lo Que Hacemos
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-8">
         {services.map((service, idx) => (
           <div
             key={service.key}

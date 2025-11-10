@@ -23,7 +23,7 @@ export default function Footer() {
           <Linkedin className="w-5 h-5" />
         </a>
       </div>
-      <p className="text-gray-400">&copy; 2024 WaveFrame Studio. Todos los derechos reservados.</p>
+      <p className="text-gray-400">&copy; 2025 WaveFrame Studio. Todos los derechos reservados.</p>
     </footer>
   );
 }

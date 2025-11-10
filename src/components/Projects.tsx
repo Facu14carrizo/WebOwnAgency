@@ -10,76 +10,92 @@ export default function Projects() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Animación del título igual que Servicios
     if (titleRef.current) {
       gsap.fromTo(
         titleRef.current,
-        { opacity: 0, x: -200, rotation: -5 },
+        { opacity: 0, y: 30, scale: 0.95 },
         {
           opacity: 1,
-          x: 0,
-          rotation: 0,
-          duration: 1.5,
-          ease: 'elastic.out(1, 0.5)',
+          y: 0,
+          scale: 1,
+          duration: 1,
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: titleRef.current,
             start: 'top 80%',
-            end: 'bottom 20%',
             toggleActions: 'play none none reverse',
           },
         }
       );
     }
 
+    // Animaciones de las cards - todas alineadas, sin movimiento vertical diferente
+    const hoverHandlers: Array<{ card: HTMLDivElement; enter: () => void; leave: () => void }> = [];
+
     cardsRef.current.forEach((card, index) => {
       if (card) {
-        const direction = index % 2 === 0 ? -100 : 100;
+        // Configurar estado inicial
+        gsap.set(card, {
+          opacity: 0,
+          y: 50,
+          scale: 0.9,
+        });
 
-        gsap.fromTo(
-          card,
-          { opacity: 0, x: direction, scale: 0.5, rotation: direction > 0 ? 15 : -15 },
-          {
-            opacity: 1,
-            x: 0,
-            scale: 1,
-            rotation: 0,
-            duration: 1.2,
-            delay: index * 0.15,
-            ease: 'back.out(1.4)',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 90%',
-              end: 'bottom 10%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-
+        // Animación de entrada suave y alineada
         gsap.to(card, {
-          y: (index % 2 === 0 ? -30 : 30),
-          ease: 'none',
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1.2,
+          delay: index * 0.1,
+          ease: 'power3.out',
           scrollTrigger: {
             trigger: card,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 3,
+            start: 'top 85%',
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse',
           },
         });
 
-        const img = card.querySelector('img');
-        if (img) {
-          gsap.to(img, {
-            scale: 1.2,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 2,
-            },
+        // Efecto hover mejorado
+        const handleMouseEnter = () => {
+          gsap.to(card, {
+            scale: 1.02,
+            y: -5,
+            duration: 0.3,
+            ease: 'power2.out',
           });
-        }
+        };
+
+        const handleMouseLeave = () => {
+          gsap.to(card, {
+            scale: 1,
+            y: 0,
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        };
+
+        card.addEventListener('mouseenter', handleMouseEnter);
+        card.addEventListener('mouseleave', handleMouseLeave);
+
+        hoverHandlers.push({
+          card,
+          enter: handleMouseEnter,
+          leave: handleMouseLeave,
+        });
       }
     });
+
+    // Cleanup
+    return () => {
+      hoverHandlers.forEach(({ card, enter, leave }) => {
+        card.removeEventListener('mouseenter', enter);
+        card.removeEventListener('mouseleave', leave);
+      });
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
   }, []);
 
   const projects = [
@@ -108,18 +124,25 @@ export default function Projects() {
   return (
     <section id="projects" className="py-32 px-8 md:px-16 bg-white/[0.02] overflow-hidden">
       <div ref={containerRef} className="max-w-[1400px] mx-auto">
-        <h2
-          ref={titleRef}
-          className="text-5xl md:text-6xl font-bold mb-12 opacity-0 translate-y-8"
-        >
-          Proyectos Destacados
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12" style={{ perspective: '1500px' }}>
+        <div className="relative mb-16">
+          <h2
+            ref={titleRef}
+            className="text-4xl md:text-5xl font-bold text-center"
+          >
+            Proyectos Destacados
+          </h2>
+          <div className="after:absolute after:content-[''] after:w-24 after:h-1 after:bg-primary after:rounded-lg after:mx-auto after:left-1/2 after:-translate-x-1/2 after:top-full after:mt-3" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((project, index) => (
             <div
               key={project.title}
               ref={el => { if (el) cardsRef.current[index] = el; }}
-              className="group relative h-[400px] rounded-3xl overflow-hidden opacity-0 scale-90 cursor-pointer"
+              className="group relative h-[400px] rounded-3xl overflow-hidden cursor-pointer"
+              style={{ 
+                willChange: 'transform, opacity',
+                transformOrigin: 'center center'
+              }}
             >
               <video
                 src={`/Demos/${project.video}`}

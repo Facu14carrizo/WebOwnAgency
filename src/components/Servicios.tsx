@@ -82,6 +82,7 @@ export default function Servicios() {
     cardsRef.current.forEach((card, index) => {
       if (card) {
         const animConfig = animations[index];
+        const isLandingPages = index === 4;
         
         // Configurar estado inicial fuera de pantalla
         gsap.set(card, {
@@ -90,21 +91,6 @@ export default function Servicios() {
           rotation: animConfig.rotation,
           opacity: 0,
           scale: animConfig.scale,
-        });
-
-        // Landing Pages aparece antes (menos delay y trigger más temprano)
-        const isLandingPages = index === 4;
-        const delay = isLandingPages ? index * 0.05 : index * 0.1;
-        const triggerStart = isLandingPages ? 'top 90%' : 'top 85%';
-
-        // Animación de impacto fuerte: movimiento rápido + rebote elástico que simula un choque
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: card,
-            start: triggerStart,
-            end: 'bottom 20%',
-            toggleActions: 'play none none reverse',
-          },
         });
 
         // Calcular overshoot basado en la dirección del movimiento (en dirección opuesta al movimiento)
@@ -119,33 +105,71 @@ export default function Servicios() {
         // Si viene desde abajo (y positivo), overshoot arriba (y negativo)
         else if (animConfig.y > 0) overshootY = -40;
 
-        // Fase 1: Movimiento rápido y directo hacia posición final (simula velocidad de choque)
-        tl.to(card, {
-          x: 0,
-          y: 0,
-          rotation: 0,
-          opacity: 1,
-          scale: 1.15, // Escala grande al impacto
-          duration: 0.4,
-          delay: delay,
-          ease: 'power4.in',
-        })
-        // Fase 2: Overshoot (pasa un poco más allá de la posición final)
-        .to(card, {
-          x: overshootX,
-          y: overshootY,
-          scale: 1.1,
-          duration: 0.15,
-          ease: 'power2.out',
-        })
-        // Fase 3: Rebote elástico de vuelta a la posición final
-        .to(card, {
-          x: 0,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          ease: 'elastic.out(1, 0.5)',
-        });
+        // Función de animación reutilizable
+        const animateCard = () => {
+          const tl = gsap.timeline();
+          
+          // Landing Pages aparece antes (menos delay)
+          const delay = isLandingPages ? 0 : index * 0.1;
+
+          // Fase 1: Movimiento rápido y directo hacia posición final (simula velocidad de choque)
+          tl.to(card, {
+            x: 0,
+            y: 0,
+            rotation: 0,
+            opacity: 1,
+            scale: 1.15, // Escala grande al impacto
+            duration: 0.4,
+            delay: delay,
+            ease: 'power4.in',
+          })
+          // Fase 2: Overshoot (pasa un poco más allá de la posición final)
+          .to(card, {
+            x: overshootX,
+            y: overshootY,
+            scale: 1.1,
+            duration: 0.15,
+            ease: 'power2.out',
+          })
+          // Fase 3: Rebote elástico de vuelta a la posición final
+          .to(card, {
+            x: 0,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            ease: 'elastic.out(1, 0.5)',
+          });
+        };
+
+        // Para Landing Pages: trigger más temprano y más agresivo
+        if (isLandingPages) {
+          // Trigger muy temprano - cuando la sección apenas entra en vista
+          ScrollTrigger.create({
+            trigger: sectionRef.current || card,
+            start: 'top 95%',
+            end: 'bottom 5%',
+            onEnter: animateCard,
+            onEnterBack: animateCard,
+            once: false,
+          });
+
+          // Fallback: Si después de 300ms no se ha activado, forzar animación
+          setTimeout(() => {
+            const currentOpacity = gsap.getProperty(card, 'opacity') as number;
+            if (currentOpacity === 0) {
+              animateCard();
+            }
+          }, 300);
+        } else {
+          // Para las otras cards, usar ScrollTrigger normal
+          ScrollTrigger.create({
+            trigger: card,
+            start: 'top 85%',
+            end: 'bottom 20%',
+            onEnter: animateCard,
+            toggleActions: 'play none none reverse',
+          });
+        }
 
         // Efecto hover mejorado
         const handleMouseEnter = () => {

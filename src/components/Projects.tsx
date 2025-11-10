@@ -84,24 +84,24 @@ export default function Projects() {
 
   const projects = [
     {
-      title: 'E-commerce Moderno',
-      category: 'Diseño Web',
-      image: 'https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=600',
+      video: 'MiGustoCrunchyDemo.mp4',
+      title: 'Web de Lanzamiento',
+      category: 'Desarrollo y diseño Web',
     },
     {
-      title: 'App Mobile',
-      category: 'Desarrollo',
-      image: 'https://images.pexels.com/photos/147413/twitter-facebook-together-exchange-of-information-147413.jpeg?auto=compress&cs=tinysrgb&w=600',
+      video: 'WaveBarberDemo.mp4',
+      title: 'App de gestión de turnos',
+      category: 'Desarrollo FrontEnd/BackEnd',
     },
     {
-      title: 'Brand Identity',
-      category: 'Branding',
-      image: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=600',
+      video: 'QrGenProDemo.mp4',
+      title: 'App Web',
+      category: 'Desarrollo Web',
     },
     {
-      title: 'Dashboard Analytics',
-      category: 'UI/UX',
-      image: 'https://images.pexels.com/photos/577585/pexels-photo-577585.jpeg?auto=compress&cs=tinysrgb&w=600',
+      video: 'MassiveMailSenderDemo.mp4',
+      title: 'App de escritorio',
+      category: 'Desarrollo BackEnd',
     },
   ];
 
@@ -118,17 +118,36 @@ export default function Projects() {
           {projects.map((project, index) => (
             <div
               key={project.title}
-              ref={(el) => {
-                if (el) cardsRef.current[index] = el;
-              }}
-              className="interactive relative h-[400px] rounded-3xl overflow-hidden opacity-0 scale-90 cursor-pointer group"
+              ref={el => { if (el) cardsRef.current[index] = el; }}
+              className="group relative h-[400px] rounded-3xl overflow-hidden opacity-0 scale-90 cursor-pointer"
             >
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              <video
+                src={`/Demos/${project.video}`}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                onError={e => {
+                  e.currentTarget.style.display = 'none';
+                  const msg = document.createElement('div');
+                  msg.innerHTML = `<span style='color:white;'>No se puede cargar el video:<br/><b>/Demos/${project.video}</b></span>`;
+                  msg.className = 'absolute inset-0 flex items-center justify-center text-white text-center bg-black/70 font-bold';
+                  e.currentTarget.parentNode?.appendChild(msg);
+                  // Debug link para abrir en otra pestaña
+                  const a = document.createElement('a');
+                  a.href = `/Demos/${project.video}`;
+                  a.innerText = `/Demos/${project.video}`;
+                  a.target = '_blank';
+                  a.style.color = '#88ffee';
+                  a.style.display = 'block';
+                  a.style.fontSize = '1.1em';
+                  msg.appendChild(a);
+                }}
               />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 flex flex-col justify-end p-8 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
                 <h3 className="text-3xl font-bold mb-2">{project.title}</h3>
                 <p className="text-primary text-sm">{project.category}</p>
               </div>

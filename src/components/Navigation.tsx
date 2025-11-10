@@ -38,7 +38,7 @@ export default function Navigation() {
               <button
                 onClick={() =>
                   scrollToSection(
-                    ['home', 'about', 'projects', 'contact'][index]
+                    ['home', 'about', 'projects', 'contacto'][index] // Cambia 'contact' a 'contacto'
                   )
                 }
                 className="text-gray-400 text-sm tracking-wider transition-colors duration-300 hover:text-white relative group"

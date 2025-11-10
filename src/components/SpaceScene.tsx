@@ -91,7 +91,7 @@ function GeometricShape({ position, type }: { position: [number, number, number]
   );
 }
 
-export default function SpaceScene() {
+function SceneContent() {
   const groupRef = useRef<THREE.Group>(null);
   const lightARef = useRef<THREE.PointLight>(null);
   const lightBRef = useRef<THREE.PointLight>(null);
@@ -123,24 +123,33 @@ export default function SpaceScene() {
   });
 
   return (
-    <div className="absolute inset-0 z-1">
+    <>
+      <CameraController />
+      <ambientLight intensity={0.5} />
+      <pointLight ref={lightARef} position={[200, 200, 200]} color="#00ff88" intensity={1} />
+      <pointLight ref={lightBRef} position={[-200, -200, 200]} color="#ff00ff" intensity={1} />
+      <group ref={groupRef}>
+        <Particles />
+        <Float speed={1.2} rotationIntensity={0.6} floatIntensity={1.2}>
+          <GeometricShape position={[-200, 100, 0]} type="torus" />
+        </Float>
+        <Float speed={1.0} rotationIntensity={0.7} floatIntensity={1.0}>
+          <GeometricShape position={[200, -100, 0]} type="icosahedron" />
+        </Float>
+        <Float speed={1.4} rotationIntensity={0.5} floatIntensity={1.5}>
+          <GeometricShape position={[0, 150, 0]} type="octahedron" />
+        </Float>
+      </group>
+    </>
+  );
+}
+
+export default function SpaceScene() {
+  // Todos los hooks de R3F deben usarse dentro de <Canvas />, por eso se encapsulan en SceneContent.
+  return (
+    <div className="absolute inset-0 z-0">
       <Canvas camera={{ position: [0, 0, 500], fov: 75 }}>
-        <CameraController />
-        <ambientLight intensity={0.5} />
-        <pointLight ref={lightARef} position={[200, 200, 200]} color="#00ff88" intensity={1} />
-        <pointLight ref={lightBRef} position={[-200, -200, 200]} color="#ff00ff" intensity={1} />
-        <group ref={groupRef}>
-          <Particles />
-          <Float speed={1.2} rotationIntensity={0.6} floatIntensity={1.2}>
-            <GeometricShape position={[-200, 100, 0]} type="torus" />
-          </Float>
-          <Float speed={1.0} rotationIntensity={0.7} floatIntensity={1.0}>
-            <GeometricShape position={[200, -100, 0]} type="icosahedron" />
-          </Float>
-          <Float speed={1.4} rotationIntensity={0.5} floatIntensity={1.5}>
-            <GeometricShape position={[0, 150, 0]} type="octahedron" />
-          </Float>
-        </group>
+        <SceneContent />
       </Canvas>
     </div>
   );

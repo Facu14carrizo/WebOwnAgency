@@ -4,6 +4,7 @@ import LoadingScreen from './components/LoadingScreen';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import About from './components/About';
+import Servicios from './components/Servicios';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
@@ -14,8 +15,9 @@ function App() {
 
   return (
     <>
-      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
-      {!loading && (
+      {loading ? (
+        <LoadingScreen onComplete={() => setLoading(false)} />
+      ) : (
         <>
           <CustomCursor />
           <ScrollParticles />
@@ -23,6 +25,7 @@ function App() {
           <main className="relative z-10">
             <Hero />
             <About />
+            <Servicios />
             <Projects />
             <Contact />
           </main>

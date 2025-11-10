@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Zap, Code, Box } from 'lucide-react';
+import { Code2, Brain, Palette, Zap, Box } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -81,20 +81,44 @@ export default function About() {
 
   const services = [
     {
-      icon: <Zap className="w-12 h-12" />,
-      title: 'Diseño UX/UI',
-      description: 'Creamos interfaces intuitivas y atractivas que proporcionan experiencias de usuario excepcionales.',
+      key: 'frontend',
+      icon: <Code2 className="w-12 h-12" />,
+      title: 'Desarrollo Frontend',
+      description: 'React, Vite y tecnologías modernas para interfaces rápidas y robustas.',
+      technologies: ['React', 'ASTRO', 'Typescript', 'Tailwind', 'Framer Motion'],
     },
     {
-      icon: <Code className="w-12 h-12" />,
-      title: 'Desarrollo Web',
-      description: 'Construimos sitios web rápidos, responsivos y optimizados para los motores de búsqueda.',
+      key: 'backend',
+      icon: <Brain className="w-12 h-12" />,
+      title: 'Desarrollo Backend',
+      description: 'APIs y sistemas escalables, optimizados y seguros.',
+      technologies: ['Node.js', 'Express', 'MongoDB', 'PostgreSQL', 'Spring Boot', 'Java'],
     },
     {
+      key: 'uxui',
+      icon: <Palette className="w-12 h-12" />,
+      title: 'UX/UI Design',
+      description: 'Diseño de experiencias visuales e interfaces centradas en el usuario.',
+      technologies: ['Figma', 'Prototyping', 'Photoshop', 'Illustrator', 'After Effects'],
+    },
+    {
+      key: '3dvisual',
       icon: <Box className="w-12 h-12" />,
-      title: 'Animaciones 3D',
-      description: 'Damos vida a tus ideas con animaciones 3D impresionantes y efectos visuales cautivadores.',
+      title: (
+        <>
+          Animaciones 3D<br />& Visuales
+        </>
+      ),
+      description: 'Gráficos, efectos 3D, experiencias AR para destacar tu marca.',
+      technologies: ['Three.js', 'React Three Fiber', 'GSAP', 'Modelos 3D' ,'Shaders', 'Efectos', 'Realidad Aumentada'],
     },
+    {
+      key: 'automatizaciones',
+      icon: <Zap className="w-12 h-12" />,
+      title: 'Automatizaciones',
+      description: 'Automatizamos procesos de negocio con bots y flujos inteligentes.',
+      technologies: ['Python', 'APIs', 'Webhooks', 'Integraciones', 'Make', 'Zapier', 'n8n', 'Bots'],
+    }
   ];
 
   return (
@@ -105,18 +129,39 @@ export default function About() {
       >
         Lo Que Hacemos
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-        {services.map((service, index) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        {services.map((service, idx) => (
           <div
-            key={service.title}
-            ref={(el) => {
-              if (el) cardsRef.current[index] = el;
+            key={service.key}
+            ref={el => {
+              if (el) cardsRef.current[idx] = el;
             }}
-            className="interactive p-8 bg-white/[0.02] border border-white/10 rounded-3xl opacity-0 translate-y-12 transition-all duration-300 hover:translate-y-[-10px] hover:border-primary"
+            className="interactive p-8 bg-black/60 border border-white/10 rounded-3xl opacity-0 translate-y-12 transition-all duration-300 hover:translate-y-[-10px] hover:border-primary"
           >
             <div className="w-15 h-15 mb-6 text-primary">{service.icon}</div>
-            <h3 className="text-2xl font-semibold mb-4">{service.title}</h3>
-            <p className="text-gray-400 leading-relaxed">{service.description}</p>
+            <h3
+              className={
+                'font-semibold mb-3 text-white leading-tight '
+                + (service.title === 'Automatizaciones'
+                  ? 'block text-xl md:text-2xl break-words'
+                  : 'text-2xl')
+              }
+            >
+              {service.title}
+            </h3>
+            <p className="text-gray-400 leading-relaxed mb-6 text-sm">{service.description}</p>
+            {service.technologies && (
+              <div className="flex flex-wrap gap-2">
+                {service.technologies.map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-3 py-1 text-xs bg-primary/10 text-primary border border-primary/20 rounded-full"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>

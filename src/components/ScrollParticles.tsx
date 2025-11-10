@@ -130,7 +130,7 @@ function AuroraPlane() {
       vec3 col = palette(band1) * band1 + palette(band2) * band2;
       col += vec3(0.2, 0.9, 0.6) * glow * 0.25;
       col = pow(col, vec3(1.2));
-      gl_FragColor = vec4(col, 0.65);
+      gl_FragColor = vec4(col, 0.10);
     }
   `;
 
@@ -150,7 +150,7 @@ function AuroraPlane() {
         fragmentShader={fragmentShader}
         vertexShader={vertexShader}
         transparent
-        blending={THREE.AdditiveBlending}
+        blending={THREE.NormalBlending}
         uniforms={{ uTime: { value: 0 } }}
       />
     </mesh>
@@ -374,7 +374,6 @@ export default function ScrollParticles() {
         <ScrollController />
         <Stars radius={300} depth={100} count={2000} factor={8} saturation={0} fade speed={0.5} />
         <Sparkles count={80} scale={[900, 500, 200]} size={8} speed={0.4} opacity={0.25} color="#ffffff" position={[0, 0, -60]} />
-        <AuroraPlane />
         <WavyPlane />
         <ambientLight intensity={0.3} />
         <pointLight position={[100, 100, 100]} color="#00ff88" intensity={0.8} />
@@ -382,7 +381,6 @@ export default function ScrollParticles() {
         <pointLight position={[0, 0, 200]} color="#00ffff" intensity={0.5} />
 
         <FloatingParticles />
-        <SwirlLines />
         <ShootingStars />
 
         <Comet start={[450, 180, -120]} velocity={[-120, -15, 0]} color="#aaffff" />

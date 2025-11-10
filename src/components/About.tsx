@@ -14,13 +14,13 @@ export default function About() {
     if (titleRef.current) {
       gsap.fromTo(
         titleRef.current,
-        { opacity: 0, y: 100, scale: 0.8 },
+        { opacity: 0, y: 60, scale: 0.95 },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 1.2,
-          ease: 'back.out(1.7)',
+          duration: 1.4,
+          ease: 'power4.out',
           scrollTrigger: {
             trigger: titleRef.current,
             start: 'top 80%',
@@ -31,36 +31,75 @@ export default function About() {
       );
     }
 
+    // Animación más fluida para las cards con stagger elegante
+    const hoverHandlers: Array<{ card: HTMLElement; enter: () => void; leave: () => void }> = [];
+
     cardsRef.current.forEach((card, index) => {
       if (card) {
-        gsap.fromTo(
-          card,
-          { opacity: 0, y: 100, rotationY: -90 },
-          {
-            opacity: 1,
-            y: 0,
-            rotationY: 0,
-            duration: 1,
-            delay: index * 0.2,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 85%',
-              end: 'bottom 15%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
+        // Inicializar estado inicial
+        gsap.set(card, {
+          opacity: 0,
+          y: 50,
+          scale: 0.92,
+          rotationX: 8,
+          transformPerspective: 1000,
+        });
 
+        // Animación de entrada suave y fluida
         gsap.to(card, {
-          y: -20,
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotationX: 0,
+          duration: 1.2,
+          delay: index * 0.1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: card,
+            start: 'top 85%',
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse',
+          },
+        });
+
+        // Parallax sutil y fluido
+        gsap.to(card, {
+          y: -15,
           ease: 'none',
           scrollTrigger: {
             trigger: card,
             start: 'top bottom',
             end: 'bottom top',
-            scrub: 2,
+            scrub: 1.5,
           },
+        });
+
+        // Efecto hover mejorado con GSAP
+        const handleMouseEnter = () => {
+          gsap.to(card, {
+            scale: 1.03,
+            y: -8,
+            duration: 0.4,
+            ease: 'power2.out',
+          });
+        };
+
+        const handleMouseLeave = () => {
+          gsap.to(card, {
+            scale: 1,
+            y: 0,
+            duration: 0.4,
+            ease: 'power2.out',
+          });
+        };
+
+        card.addEventListener('mouseenter', handleMouseEnter);
+        card.addEventListener('mouseleave', handleMouseLeave);
+
+        hoverHandlers.push({
+          card,
+          enter: handleMouseEnter,
+          leave: handleMouseLeave,
         });
       }
     });
@@ -77,6 +116,15 @@ export default function About() {
         },
       });
     }
+
+    // Cleanup function
+    return () => {
+      hoverHandlers.forEach(({ card, enter, leave }) => {
+        card.removeEventListener('mouseenter', enter);
+        card.removeEventListener('mouseleave', leave);
+      });
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
   }, []);
 
   const services = [
@@ -125,7 +173,7 @@ export default function About() {
     <section ref={sectionRef} id="about" className="py-32 px-8 md:px-16 max-w-[1400px] mx-auto relative" style={{ backgroundPosition: '50% 0%' }}>
       <h2
         ref={titleRef}
-        className="text-5xl md:text-6xl font-bold mb-12 opacity-0 translate-y-8"
+        className="text-5xl md:text-6xl font-bold mb-12"
       >
         Lo Que Hacemos
       </h2>
@@ -136,7 +184,8 @@ export default function About() {
             ref={el => {
               if (el) cardsRef.current[idx] = el;
             }}
-            className="interactive p-8 bg-black/60 border border-white/10 rounded-3xl opacity-0 translate-y-12 transition-all duration-300 hover:translate-y-[-10px] hover:border-primary"
+            className="interactive p-8 bg-black/60 border border-white/10 rounded-3xl hover:border-primary cursor-pointer"
+            style={{ willChange: 'transform, opacity' }}
           >
             <div className="w-15 h-15 mb-6 text-primary">{service.icon}</div>
             <h3

@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Globe, Smartphone, Monitor, ShoppingCart, FileText, Zap } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const servicios = [
   {
@@ -53,18 +57,178 @@ const servicios = [
 ];
 
 export default function Servicios() {
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    // Configuración de animaciones según la dirección de cada card - MOVIMIENTOS RECTOS CON IMPACTO
+    const animations = [
+      // 0 - Aplicaciones Web: izquierda a derecha (movimiento recto, impacto fuerte)
+      { x: -1500, y: 0, rotation: 0, scale: 0.7 },
+      // 1 - Aplicaciones Móviles: arriba a abajo (movimiento recto, impacto fuerte)
+      { x: 0, y: -1500, rotation: 0, scale: 0.7 },
+      // 2 - Aplicaciones de Escritorio: derecha a izquierda (movimiento recto, impacto fuerte)
+      { x: 1500, y: 0, rotation: 0, scale: 0.7 },
+      // 3 - Ecommerce: izquierda a derecha (movimiento recto, impacto fuerte)
+      { x: -1500, y: 0, rotation: 0, scale: 0.7 },
+      // 4 - Landing Pages: abajo a arriba (movimiento recto, impacto fuerte, aparece antes)
+      { x: 0, y: 1500, rotation: 0, scale: 0.7 },
+      // 5 - Automatizaciones Avanzadas: derecha a izquierda (movimiento recto, impacto fuerte)
+      { x: 1500, y: 0, rotation: 0, scale: 0.7 },
+    ];
+
+    const hoverHandlers: Array<{ card: HTMLDivElement; enter: () => void; leave: () => void }> = [];
+
+    cardsRef.current.forEach((card, index) => {
+      if (card) {
+        const animConfig = animations[index];
+        
+        // Configurar estado inicial fuera de pantalla
+        gsap.set(card, {
+          x: animConfig.x,
+          y: animConfig.y,
+          rotation: animConfig.rotation,
+          opacity: 0,
+          scale: animConfig.scale,
+        });
+
+        // Landing Pages aparece antes (menos delay y trigger más temprano)
+        const isLandingPages = index === 4;
+        const delay = isLandingPages ? index * 0.05 : index * 0.1;
+        const triggerStart = isLandingPages ? 'top 90%' : 'top 85%';
+
+        // Animación de impacto fuerte: movimiento rápido + rebote elástico que simula un choque
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            start: triggerStart,
+            end: 'bottom 20%',
+            toggleActions: 'play none none reverse',
+          },
+        });
+
+        // Calcular overshoot basado en la dirección del movimiento (en dirección opuesta al movimiento)
+        let overshootX = 0;
+        let overshootY = 0;
+        // Si viene desde izquierda (x negativo), overshoot a la derecha (x positivo)
+        if (animConfig.x < 0) overshootX = 40;
+        // Si viene desde derecha (x positivo), overshoot a la izquierda (x negativo)
+        else if (animConfig.x > 0) overshootX = -40;
+        // Si viene desde arriba (y negativo), overshoot abajo (y positivo)
+        if (animConfig.y < 0) overshootY = 40;
+        // Si viene desde abajo (y positivo), overshoot arriba (y negativo)
+        else if (animConfig.y > 0) overshootY = -40;
+
+        // Fase 1: Movimiento rápido y directo hacia posición final (simula velocidad de choque)
+        tl.to(card, {
+          x: 0,
+          y: 0,
+          rotation: 0,
+          opacity: 1,
+          scale: 1.15, // Escala grande al impacto
+          duration: 0.4,
+          delay: delay,
+          ease: 'power4.in',
+        })
+        // Fase 2: Overshoot (pasa un poco más allá de la posición final)
+        .to(card, {
+          x: overshootX,
+          y: overshootY,
+          scale: 1.1,
+          duration: 0.15,
+          ease: 'power2.out',
+        })
+        // Fase 3: Rebote elástico de vuelta a la posición final
+        .to(card, {
+          x: 0,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: 'elastic.out(1, 0.5)',
+        });
+
+        // Efecto hover mejorado
+        const handleMouseEnter = () => {
+          gsap.to(card, {
+            scale: 1.05,
+            y: -5,
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        };
+
+        const handleMouseLeave = () => {
+          gsap.to(card, {
+            scale: 1,
+            y: 0,
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        };
+
+        card.addEventListener('mouseenter', handleMouseEnter);
+        card.addEventListener('mouseleave', handleMouseLeave);
+
+        hoverHandlers.push({
+          card,
+          enter: handleMouseEnter,
+          leave: handleMouseLeave,
+        });
+      }
+    });
+
+    // Animación del título
+    const titleElement = sectionRef.current?.querySelector('h2');
+    if (titleElement) {
+      gsap.fromTo(
+        titleElement,
+        { opacity: 0, y: 30, scale: 0.95 },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: titleElement,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+        }
+      );
+    }
+
+    // Cleanup
+    return () => {
+      hoverHandlers.forEach(({ card, enter, leave }) => {
+        card.removeEventListener('mouseenter', enter);
+        card.removeEventListener('mouseleave', leave);
+      });
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
   return (
-    <section className="py-20 px-4 md:px-8" id="servicios">
+    <section ref={sectionRef} className="py-20 px-4 md:px-8 overflow-hidden" id="servicios">
       <div className="max-w-[1200px] mx-auto">
         <div className="relative mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-center">Servicios</h2>
           <div className="after:absolute after:content-[''] after:w-24 after:h-1 after:bg-primary after:rounded-lg after:mx-auto after:left-1/2 after:-translate-x-1/2 after:top-full after:mt-3" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
           {servicios.map((serv, i) => (
             <div
               key={serv.title}
-              className="flex flex-col bg-black/70 border border-white/10 rounded-2xl p-8 min-h-[320px] shadow-[0_0_20px_0_rgba(0,255,136,0.12)] relative"
+              ref={(el) => {
+                cardsRef.current[i] = el;
+              }}
+              className="flex flex-col bg-black/70 border border-white/10 rounded-2xl p-8 min-h-[320px] shadow-[0_0_20px_0_rgba(0,255,136,0.12)] relative cursor-pointer overflow-hidden"
+              style={{ 
+                willChange: 'transform, opacity',
+                transformOrigin: 'center center',
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden'
+              }}
             >
               <div className='h-1 w-14 bg-gradient-to-r from-primary to-secondary rounded-full mx-auto mb-6'></div>
               {serv.icon}

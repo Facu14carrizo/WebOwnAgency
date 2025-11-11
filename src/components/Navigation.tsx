@@ -59,10 +59,10 @@ export default function Navigation() {
       <nav
         className="fixed top-0 w-full pl-0 pr-4 md:pr-8 lg:pr-16 py-2 md:py-3 z-[1000] transition-all duration-300"
       >
-        <div className="max-w-[1400px] mx-auto flex justify-between items-center">
+        <div className="max-w-[1400px] mx-auto relative flex items-center">
           <button
             onClick={() => scrollToSection('home')}
-            className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent cursor-pointer -ml-6 md:-ml-5 lg:-ml-6"
+            className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent cursor-pointer -ml-6 md:-ml-5 lg:-ml-6 absolute left-0 z-10"
           >
             <span
               className={`inline-block transition-all duration-500 ease-in-out ${
@@ -80,25 +80,28 @@ export default function Navigation() {
             </span>
           </button>
           
-          {/* Menú desktop */}
-          <ul className="hidden md:flex gap-8 lg:gap-12 list-none">
-            {menuItems.map((item) => (
-              <li key={item.id}>
-                <button
-                  onClick={() => scrollToSection(item.id)}
-                  className="text-gray-400 text-sm tracking-wider transition-colors duration-300 hover:text-white relative group"
-                >
-                  {item.label}
-                  <span className="absolute bottom-[-5px] left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full" />
-                </button>
-              </li>
-            ))}
-          </ul>
+          {/* Menú desktop - Centrado con blur */}
+          <div className="hidden md:block mx-auto relative">
+            <div className="absolute inset-0 bg-dark/30 backdrop-blur-lg rounded-full -z-10" style={{ padding: '0.5rem 2rem' }}></div>
+            <ul className="flex gap-8 lg:gap-12 list-none px-6 py-2 relative">
+              {menuItems.map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => scrollToSection(item.id)}
+                    className="text-gray-400 text-sm tracking-wider transition-colors duration-300 hover:text-white relative group"
+                  >
+                    {item.label}
+                    <span className="absolute bottom-[-5px] left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           {/* Botón hamburguesa móvil */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="md:hidden text-white p-2 hover:text-primary transition-colors"
+            className="md:hidden text-white p-2 hover:text-primary transition-colors absolute right-0"
             aria-label="Abrir menú"
           >
             <Menu className="w-6 h-6" />

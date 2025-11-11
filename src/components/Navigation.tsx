@@ -88,7 +88,7 @@ export default function Navigation() {
                 <li key={item.id}>
                   <button
                     onClick={() => scrollToSection(item.id)}
-                    className="text-gray-400 text-sm tracking-wider transition-colors duration-300 hover:text-white relative group"
+                    className="text-white text-sm tracking-wider transition-colors duration-300 relative group"
                   >
                     {item.label}
                     <span className="absolute bottom-[-5px] left-0 w-0 h-[2px] bg-primary transition-all duration-300 group-hover:w-full" />

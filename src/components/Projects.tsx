@@ -193,12 +193,13 @@ export default function Projects() {
                 transformOrigin: 'center center'
               }}
             >
-              {/* Contenedor del video con padding */}
-              <div className="absolute inset-0 p-4 md:p-6">
+              {/* Video que ocupa toda la card normalmente, y se muestra completo al hover */}
+              <div className="absolute inset-0 overflow-hidden">
+                {/* Video con object-cover (ocupa toda la card) */}
                 <video
                   ref={el => { if (el) videoRefs.current[index] = el; }}
                   src={`/Demos/${project.video}`}
-                  className="w-full h-full object-contain rounded-lg transition-transform duration-500 group-hover:scale-105"
+                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
                   autoPlay
                   loop
                   muted
@@ -208,7 +209,7 @@ export default function Projects() {
                     e.currentTarget.style.display = 'none';
                     const msg = document.createElement('div');
                     msg.innerHTML = `<span style='color:white;'>No se puede cargar el video:<br/><b>/Demos/${project.video}</b></span>`;
-                    msg.className = 'absolute inset-0 flex items-center justify-center text-white text-center bg-black/70 font-bold rounded-lg';
+                    msg.className = 'absolute inset-0 flex items-center justify-center text-white text-center bg-black/70 font-bold';
                     e.currentTarget.parentNode?.appendChild(msg);
                     // Debug link para abrir en otra pestaña
                     const a = document.createElement('a');
@@ -220,6 +221,16 @@ export default function Projects() {
                     a.style.fontSize = '1.1em';
                     msg.appendChild(a);
                   }}
+                />
+                {/* Video con object-contain (se muestra completo al hover) */}
+                <video
+                  src={`/Demos/${project.video}`}
+                  className="absolute inset-0 w-full h-full object-contain opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
                 />
               </div>
               {/* Overlay con información del proyecto */}

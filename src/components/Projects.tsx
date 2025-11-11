@@ -8,6 +8,7 @@ export default function Projects() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const cardsRef = useRef<HTMLDivElement[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   useEffect(() => {
     // Animación del título igual que Servicios
@@ -98,6 +99,54 @@ export default function Projects() {
     };
   }, []);
 
+  // Lazy loading de videos con Intersection Observer - optimización de carga
+  useEffect(() => {
+    const observers: IntersectionObserver[] = [];
+    let timeoutId: NodeJS.Timeout;
+
+    // Pequeño delay para asegurar que los refs estén disponibles
+    timeoutId = setTimeout(() => {
+      videoRefs.current.forEach((video) => {
+        if (!video) return;
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                // Cuando el video está cerca de ser visible, cargar completamente
+                if (video.readyState < 2) {
+                  // Si el video no está cargado (readyState < 2 = HAVE_CURRENT_DATA)
+                  video.load();
+                }
+                // Asegurar que el video se reproduzca
+                video.play().catch(() => {
+                  // Si falla el autoplay (políticas del navegador), no hacer nada
+                });
+              } else {
+                // Cuando sale de vista, pausar para ahorrar recursos
+                if (!video.paused) {
+                  video.pause();
+                }
+              }
+            });
+          },
+          {
+            rootMargin: '150px', // Comenzar a cargar cuando está a 150px de ser visible
+            threshold: 0.01,
+          }
+        );
+
+        observer.observe(video);
+        observers.push(observer);
+      });
+    }, 100); // 100ms de delay para asegurar que los refs estén disponibles
+
+    return () => {
+      clearTimeout(timeoutId);
+      observers.forEach((observer) => observer.disconnect());
+    };
+  }, []);
+
   const projects = [
     {
       video: 'MiGustoCrunchyDemo.mp4',
@@ -138,39 +187,43 @@ export default function Projects() {
             <div
               key={project.title}
               ref={el => { if (el) cardsRef.current[index] = el; }}
-              className="group relative h-[400px] rounded-3xl overflow-hidden cursor-pointer"
+              className="group relative h-[400px] rounded-3xl overflow-hidden cursor-pointer bg-black/40"
               style={{ 
                 willChange: 'transform, opacity',
                 transformOrigin: 'center center'
               }}
             >
-              <video
-                src={`/Demos/${project.video}`}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                onError={e => {
-                  e.currentTarget.style.display = 'none';
-                  const msg = document.createElement('div');
-                  msg.innerHTML = `<span style='color:white;'>No se puede cargar el video:<br/><b>/Demos/${project.video}</b></span>`;
-                  msg.className = 'absolute inset-0 flex items-center justify-center text-white text-center bg-black/70 font-bold';
-                  e.currentTarget.parentNode?.appendChild(msg);
-                  // Debug link para abrir en otra pestaña
-                  const a = document.createElement('a');
-                  a.href = `/Demos/${project.video}`;
-                  a.innerText = `/Demos/${project.video}`;
-                  a.target = '_blank';
-                  a.style.color = '#88ffee';
-                  a.style.display = 'block';
-                  a.style.fontSize = '1.1em';
-                  msg.appendChild(a);
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+              {/* Contenedor del video con padding */}
+              <div className="absolute inset-0 p-4 md:p-6">
+                <video
+                  ref={el => { if (el) videoRefs.current[index] = el; }}
+                  src={`/Demos/${project.video}`}
+                  className="w-full h-full object-contain rounded-lg transition-transform duration-500 group-hover:scale-105"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  onError={e => {
+                    e.currentTarget.style.display = 'none';
+                    const msg = document.createElement('div');
+                    msg.innerHTML = `<span style='color:white;'>No se puede cargar el video:<br/><b>/Demos/${project.video}</b></span>`;
+                    msg.className = 'absolute inset-0 flex items-center justify-center text-white text-center bg-black/70 font-bold rounded-lg';
+                    e.currentTarget.parentNode?.appendChild(msg);
+                    // Debug link para abrir en otra pestaña
+                    const a = document.createElement('a');
+                    a.href = `/Demos/${project.video}`;
+                    a.innerText = `/Demos/${project.video}`;
+                    a.target = '_blank';
+                    a.style.color = '#88ffee';
+                    a.style.display = 'block';
+                    a.style.fontSize = '1.1em';
+                    msg.appendChild(a);
+                  }}
+                />
+              </div>
+              {/* Overlay con información del proyecto */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 pointer-events-none">
                 <h3 className="text-3xl font-bold mb-2">{project.title}</h3>
                 <p className="text-primary text-sm">{project.category}</p>
               </div>

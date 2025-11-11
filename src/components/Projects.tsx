@@ -101,22 +101,22 @@ export default function Projects() {
   const projects = [
     {
       video: 'MiGustoCrunchyDemo.mp4',
-      title: 'Web de Lanzamiento',
-      category: 'Desarrollo y diseño Web',
+      title: 'Lanzamiento de CRUNCHY, Mi Gusto x Flamin\' Hot',
+      category: 'Desarrollo y Diseño Web',
     },
     {
       video: 'WaveBarberDemo.mp4',
-      title: 'App de gestión de turnos',
+      title: 'Wave Barbershop App',
       category: 'Desarrollo FrontEnd/BackEnd',
     },
     {
       video: 'QrGenProDemo.mp4',
-      title: 'App Web',
+      title: 'QR Generator Pro',
       category: 'Desarrollo Web',
     },
     {
       video: 'MassiveMailSenderDemo.mp4',
-      title: 'App de escritorio',
+      title: 'Enviador Masivo de Emails',
       category: 'Desarrollo BackEnd',
     },
   ];

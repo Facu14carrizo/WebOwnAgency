@@ -177,34 +177,37 @@ export default function About() {
       >
         <span style={{ color: '#00ff88' }}>Lo que</span> Hacemos
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 w-full">
         {services.map((service, idx) => (
           <div
             key={service.key}
             ref={el => {
               if (el) cardsRef.current[idx] = el;
             }}
-            className="interactive p-8 bg-black/60 border border-white/10 rounded-3xl hover:border-primary cursor-pointer"
-            style={{ willChange: 'transform, opacity' }}
+            className="interactive p-5 md:p-6 bg-black/60 border border-white/10 rounded-3xl hover:border-primary cursor-pointer flex flex-col w-full"
+            style={{ 
+              willChange: 'transform, opacity',
+              aspectRatio: '0.9'
+            }}
           >
-            <div className="w-15 h-15 mb-6 text-primary">{service.icon}</div>
+            <div className="w-10 h-10 md:w-12 md:h-12 mb-3 md:mb-4 text-primary flex-shrink-0">{service.icon}</div>
             <h3
               className={
-                'font-semibold mb-3 text-white leading-tight '
+                'font-semibold mb-2 text-white leading-tight flex-shrink-0 '
                 + (service.title === 'Automatizaciones'
-                  ? 'block text-xl md:text-2xl break-words'
-                  : 'text-2xl')
+                  ? 'block text-base md:text-lg break-words'
+                  : 'text-lg md:text-xl')
               }
             >
               {service.title}
             </h3>
-            <p className="text-gray-400 leading-relaxed mb-6 text-sm">{service.description}</p>
+            <p className="text-gray-400 leading-relaxed mb-3 md:mb-4 text-xs md:text-sm flex-grow overflow-hidden">{service.description}</p>
             {service.technologies && (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1 md:gap-1.5 flex-shrink-0">
                 {service.technologies.map((tech) => (
                   <span
                     key={tech}
-                    className="px-3 py-1 text-xs bg-primary/10 text-primary border border-primary/20 rounded-full"
+                    className="px-2 py-0.5 text-[10px] md:text-xs bg-primary/10 text-primary border border-primary/20 rounded-full"
                   >
                     {tech}
                   </span>

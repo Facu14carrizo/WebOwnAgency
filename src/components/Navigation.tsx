@@ -57,9 +57,7 @@ export default function Navigation() {
   return (
     <>
       <nav
-        className={`fixed top-0 w-full px-4 md:px-8 lg:px-16 py-4 md:py-8 z-[1000] backdrop-blur-md transition-all duration-300 ${
-          scrolled ? 'bg-dark/80' : 'bg-dark/50'
-        }`}
+        className="fixed top-0 w-full px-4 md:px-8 lg:px-16 py-2 md:py-3 z-[1000] transition-all duration-300"
       >
         <div className="max-w-[1400px] mx-auto flex justify-between items-center">
           <button

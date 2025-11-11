@@ -159,7 +159,7 @@ export default function Contact() {
         </button>
       </div>
       <h2 className="text-4xl md:text-5xl font-bold text-center mb-4">
-        Comencemos Tu <span className="text-primary">Proyecto</span>
+        <span style={{ color: '#00ff88' }}>Comencemos</span> Tu Proyecto
       </h2>
       <p className="text-center text-gray-300 mb-10 max-w-2xl mx-auto">
         ¿Listo para transformar tu idea en realidad digital? Agenda una consulta gratuita y descubre cómo podemos impulsar tu negocio al siguiente nivel.

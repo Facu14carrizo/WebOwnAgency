@@ -61,7 +61,7 @@ export default function Hero() {
           ref={titleRef}
           className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-tight mb-4 sm:mb-6 md:mb-8"
         >
-          Creamos
+          <span style={{ color: '#00ff88' }}>Creamos</span>
           <br />
           Experiencias
           <br />

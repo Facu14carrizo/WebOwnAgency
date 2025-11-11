@@ -178,7 +178,7 @@ export default function Projects() {
             ref={titleRef}
             className="text-4xl md:text-5xl font-bold text-center"
           >
-            Proyectos Destacados
+            <span style={{ color: '#00ff88' }}>Proyectos</span> Destacados
           </h2>
           <div className="after:absolute after:content-[''] after:w-24 after:h-1 after:bg-primary after:rounded-lg after:mx-auto after:left-1/2 after:-translate-x-1/2 after:top-full after:mt-3" />
         </div>

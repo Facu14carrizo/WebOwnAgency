@@ -57,12 +57,12 @@ export default function Navigation() {
   return (
     <>
       <nav
-        className="fixed top-0 w-full px-4 md:px-8 lg:px-16 py-2 md:py-3 z-[1000] transition-all duration-300"
+        className="fixed top-0 w-full pl-0 pr-4 md:pr-8 lg:pr-16 py-2 md:py-3 z-[1000] transition-all duration-300"
       >
         <div className="max-w-[1400px] mx-auto flex justify-between items-center">
           <button
             onClick={() => scrollToSection('home')}
-            className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent cursor-pointer"
+            className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent cursor-pointer -ml-6 md:-ml-5 lg:-ml-6"
           >
             <span
               className={`inline-block transition-all duration-500 ease-in-out ${

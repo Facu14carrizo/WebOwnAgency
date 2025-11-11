@@ -57,29 +57,29 @@ export default function Navigation() {
   return (
     <>
       <nav
-        className="fixed top-0 w-full pl-0 pr-4 md:pr-8 lg:pr-16 py-2 md:py-3 z-[1000] transition-all duration-300"
+        className="fixed top-0 w-full pr-4 md:pr-8 lg:pr-16 py-2 md:py-3 z-[1000] transition-all duration-300"
       >
-        <div className="max-w-[1400px] mx-auto relative flex items-center">
-          <button
-            onClick={() => scrollToSection('home')}
-            className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent cursor-pointer -ml-6 md:-ml-5 lg:-ml-6 absolute left-0 z-10"
+        <button
+          onClick={() => scrollToSection('home')}
+          className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent cursor-pointer absolute left-4 md:left-6 lg:left-8 z-10"
+        >
+          <span
+            className={`inline-block transition-all duration-500 ease-in-out ${
+              scrolled ? 'w-[50px] md:w-[60px]' : 'w-[150px] md:w-[170px]'
+            }`}
+            style={{
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+              display: 'inline-block',
+              height: '1.5em',
+              lineHeight: '1.5em'
+            }}
           >
-            <span
-              className={`inline-block transition-all duration-500 ease-in-out ${
-                scrolled ? 'w-[50px] md:w-[60px]' : 'w-[150px] md:w-[170px]'
-              }`}
-              style={{
-                overflow: 'hidden',
-                whiteSpace: 'nowrap',
-                display: 'inline-block',
-                height: '1.5em',
-                lineHeight: '1.5em'
-              }}
-            >
-              {scrolled ? 'WF' : 'WaveFrame'}
-            </span>
-          </button>
-          
+            {scrolled ? 'WF' : 'WaveFrame'}
+          </span>
+        </button>
+        
+        <div className="max-w-[1400px] mx-auto relative flex items-center justify-center">
           {/* Menú desktop - Centrado con blur */}
           <div className="hidden md:block mx-auto relative">
             <div className="absolute inset-0 bg-dark/30 backdrop-blur-lg rounded-full -z-10" style={{ padding: '0.5rem 2rem' }}></div>

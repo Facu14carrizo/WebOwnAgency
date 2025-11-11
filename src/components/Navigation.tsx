@@ -66,7 +66,20 @@ export default function Navigation() {
             onClick={() => scrollToSection('home')}
             className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent cursor-pointer"
           >
-            WaveFrame
+            <span
+              className={`inline-block transition-all duration-500 ease-in-out ${
+                scrolled ? 'w-[50px] md:w-[60px]' : 'w-[150px] md:w-[170px]'
+              }`}
+              style={{
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                display: 'inline-block',
+                height: '1.5em',
+                lineHeight: '1.5em'
+              }}
+            >
+              {scrolled ? 'WF' : 'WaveFrame'}
+            </span>
           </button>
           
           {/* Menú desktop */}
@@ -121,7 +134,7 @@ export default function Navigation() {
 
             {/* Items del menú */}
             <ul className="flex flex-col p-4 gap-2">
-              {menuItems.map((item, index) => (
+              {menuItems.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => scrollToSection(item.id)}
@@ -148,6 +161,19 @@ export default function Navigation() {
         }
         .animate-slide-in-right {
           animation: slide-in-right 0.3s ease-out;
+        }
+        @keyframes logo-fade {
+          from {
+            opacity: 0;
+            transform: scale(0.9);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+        .animate-logo-transition {
+          animation: logo-fade 0.5s ease-in-out;
         }
       `}</style>
     </>

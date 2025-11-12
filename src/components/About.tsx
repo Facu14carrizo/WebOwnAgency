@@ -184,30 +184,29 @@ export default function About() {
             ref={el => {
               if (el) cardsRef.current[idx] = el;
             }}
-            className="interactive p-5 md:p-6 bg-black/60 border border-white/10 rounded-3xl hover:border-primary cursor-pointer flex flex-col w-full"
+            className="interactive p-6 md:p-6 bg-black/60 border border-white/10 rounded-3xl hover:border-primary cursor-pointer flex flex-col w-full min-h-[280px] md:min-h-0 md:[aspect-ratio:0.9]"
             style={{ 
               willChange: 'transform, opacity',
-              aspectRatio: '0.9'
             }}
           >
-            <div className="w-10 h-10 md:w-12 md:h-12 mb-3 md:mb-4 text-primary flex-shrink-0">{service.icon}</div>
+            <div className="w-12 h-12 md:w-12 md:h-12 mb-4 md:mb-4 text-primary flex-shrink-0">{service.icon}</div>
             <h3
               className={
-                'font-semibold mb-2 text-white leading-tight flex-shrink-0 '
+                'font-semibold mb-3 md:mb-2 text-white leading-tight flex-shrink-0 '
                 + (service.title === 'Automatizaciones'
-                  ? 'block text-base md:text-lg break-words'
-                  : 'text-lg md:text-xl')
+                  ? 'block text-lg md:text-lg break-words'
+                  : 'text-xl md:text-xl')
               }
             >
               {service.title}
             </h3>
-            <p className="text-gray-400 leading-relaxed mb-3 md:mb-4 text-xs md:text-sm flex-grow overflow-hidden">{service.description}</p>
+            <p className="text-gray-400 leading-relaxed mb-4 md:mb-4 text-sm md:text-sm flex-grow min-h-[60px]">{service.description}</p>
             {service.technologies && (
-              <div className="flex flex-wrap gap-1 md:gap-1.5 flex-shrink-0">
+              <div className="flex flex-wrap gap-1.5 md:gap-1.5 flex-shrink-0 mt-auto">
                 {service.technologies.map((tech) => (
                   <span
                     key={tech}
-                    className="px-2 py-0.5 text-[10px] md:text-xs bg-primary/10 text-primary border border-primary/20 rounded-full"
+                    className="px-2.5 py-1 md:py-0.5 text-xs md:text-xs bg-primary/10 text-primary border border-primary/20 rounded-full whitespace-nowrap"
                   >
                     {tech}
                   </span>

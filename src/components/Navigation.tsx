@@ -46,6 +46,11 @@ export default function Navigation() {
     }
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsMobileMenuOpen(false);
+  };
+
   const menuItems = [
     { label: 'Inicio', id: 'home' },
     { label: 'Sobre Nosotros', id: 'about' },
@@ -60,7 +65,7 @@ export default function Navigation() {
         className="fixed top-0 w-full pr-4 md:pr-8 lg:pr-16 py-2 md:py-3 z-[1000] transition-all duration-300"
       >
         <button
-          onClick={() => scrollToSection('home')}
+          onClick={scrollToTop}
           className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent cursor-pointer absolute left-4 md:left-6 lg:left-8 z-10"
         >
           <span
@@ -79,7 +84,7 @@ export default function Navigation() {
           </span>
         </button>
         
-        <div className="max-w-[1400px] mx-auto relative flex items-center justify-center">
+        <div className="max-w-[1400px] mx-auto relative flex md:items-center justify-center" style={{ minHeight: '100%' }}>
           {/* Menú desktop - Centrado con blur */}
           <div className="hidden md:block mx-auto relative">
             <div className="absolute inset-0 bg-dark/30 backdrop-blur-lg rounded-full -z-10" style={{ padding: '0.5rem 2rem' }}></div>
@@ -103,6 +108,15 @@ export default function Navigation() {
             onClick={() => setIsMobileMenuOpen(true)}
             className="md:hidden text-white p-2 hover:text-primary transition-colors absolute right-0"
             aria-label="Abrir menú"
+            style={{
+              minWidth: '44px',
+              minHeight: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              top: 'calc(50% + 10px)',
+              transform: 'translateY(-50%)',
+            }}
           >
             <Menu className="w-6 h-6" />
           </button>

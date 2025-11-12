@@ -1,6 +1,7 @@
-import { Mail, Smartphone, MapPin, Calendar, CheckCircle, MessageCircle, X, Send } from 'lucide-react';
+import { Mail, Smartphone, MapPin, Calendar, CheckCircle, MessageCircle, X, Send, Loader2 } from 'lucide-react';
 import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
+import emailjs from '@emailjs/browser';
 
 const motivos1 = [
   'Consulta inicial gratuita de 30 minutos',
@@ -32,8 +33,19 @@ const tiempos = [
 export default function Contact() {
   const [showForm, setShowForm] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [formData, setFormData] = useState({
+    nombre: '',
+    email: '',
+    empresa: '',
+    tipoProyecto: '',
+    tiempoProyecto: '',
+    mensaje: ''
+  });
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const overlayRef = useRef(null);
+  const formRef = useRef<HTMLFormElement | null>(null);
 
   useEffect(() => {
     if (showForm) {
@@ -82,8 +94,75 @@ export default function Contact() {
           clearProps: 'all',
         });
       }
+    } else {
+      // Reset form cuando se cierra
+      setFormData({
+        nombre: '',
+        email: '',
+        empresa: '',
+        tipoProyecto: '',
+        tiempoProyecto: '',
+        mensaje: ''
+      });
+      setSubmitStatus('idle');
     }
   }, [showForm]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      // Configuración de EmailJS desde variables de entorno
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      // Validar que las credenciales estén configuradas
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error('Las credenciales de EmailJS no están configuradas correctamente');
+      }
+
+      // Preparar los parámetros del template
+      const templateParams = {
+        from_name: formData.nombre,
+        from_email: formData.email,
+        empresa: formData.empresa || 'No especificada',
+        tipo_proyecto: formData.tipoProyecto || 'No especificado',
+        tiempo_proyecto: formData.tiempoProyecto || 'No especificado',
+        message: formData.mensaje,
+        to_email: 'wave1frame@gmail.com'
+      };
+
+      // Enviar el email
+      await emailjs.send(
+        serviceId,
+        templateId,
+        templateParams,
+        publicKey
+      );
+
+      setSubmitStatus('success');
+      // Cerrar el formulario después de 3 segundos
+      setTimeout(() => {
+        setShowForm(false);
+      }, 3000);
+    } catch (error) {
+      console.error('Error al enviar el formulario:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section className="max-w-[950px] mx-auto px-4 py-20" id="contacto">
@@ -93,62 +172,147 @@ export default function Contact() {
           {/* Overlay - solo visible en desktop */}
           <div ref={overlayRef} className="hidden md:flex bg-black/60 flex-1" onClick={() => setShowForm(false)} />
           {/* Sidebar - full width en móvil, ancho fijo en desktop */}
-          <div ref={sidebarRef} className="w-full md:w-[430px] md:max-w-md h-screen pt-16 bg-[#15181b] md:border-l border-white/10 shadow-2xl pb-8 px-4 sm:px-7 relative overflow-y-auto">
+          <div ref={sidebarRef} className="w-full md:w-[430px] md:max-w-md h-screen pt-20 md:pt-16 bg-[#15181b] md:border-l border-white/10 shadow-2xl pb-8 px-4 sm:px-7 relative overflow-y-auto">
             <button 
-              className="absolute top-4 right-4 text-white hover:text-primary bg-white/10 hover:bg-white/20 p-2 rounded-lg transition-colors z-10 active:scale-95" 
+              className="md:hidden fixed top-4 right-4 text-white hover:text-primary bg-white/10 hover:bg-white/20 p-3 rounded-lg transition-colors z-[10000] active:scale-95 touch-manipulation" 
               onClick={() => setShowForm(false)}
               aria-label="Cerrar formulario"
+              style={{
+                minWidth: '44px',
+                minHeight: '44px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
             >
-              <X className="w-6 h-6" />
+              <X className="w-6 h-6" strokeWidth={2.5} />
             </button>
             <h2 className="text-xl font-bold mb-6">Contanos sobre tu proyecto</h2>
-            <form className="flex flex-col gap-4 pb-8">
-              <div>
-                <label className="text-sm font-medium text-white block mb-1">Nombre Completo <span className="text-primary">*</span></label>
-                <input className="w-full rounded bg-black/60 border border-white/10 px-4 py-2.5 text-sm text-white outline-none focus:border-primary placeholder-gray-400" placeholder="Tu nombre" required autoFocus />
+            {submitStatus === 'success' ? (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <CheckCircle className="w-16 h-16 text-primary mb-4" />
+                <h3 className="text-xl font-bold text-white mb-2">¡Mensaje enviado!</h3>
+                <p className="text-gray-300 text-sm">Te contactaremos pronto a través de tu email.</p>
               </div>
-              <div>
-                <label className="text-sm font-medium text-white block mb-1">Email <span className="text-primary">*</span></label>
-                <input type="email" className="w-full rounded bg-black/60 border border-white/10 px-4 py-2.5 text-sm text-white outline-none focus:border-primary placeholder-gray-400" placeholder="email@ejemplo.com" required />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-white block mb-1">Empresa</label>
-                <input type="text" className="w-full rounded bg-black/60 border border-white/10 px-4 py-2.5 text-sm text-white outline-none focus:border-primary placeholder-gray-400" placeholder="Tu empresa" />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-white block mb-1">Tipo de Proyecto <span className="text-primary">*</span></label>
-                <div className="relative">
-                  <select
-                    className="w-full rounded bg-black/60 border border-white/10 px-4 py-2.5 text-sm text-white outline-none pr-10 appearance-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-gray-400 transition-colors"
-                    required
-                  >
-                    <option className='bg-black/90 text-white' value="">Selecciona una opción</option>
-                    {proyectos.map(p => <option className='bg-black/90 text-white' key={p} value={p}>{p}</option>)}
-                  </select>
-                  {/* Flecha custom */}
-                  <svg className="pointer-events-none w-4 h-4 text-primary absolute top-1/2 right-4 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            ) : (
+              <form ref={formRef} onSubmit={handleSubmit} className="flex flex-col gap-4 pb-8">
+                <div>
+                  <label className="text-sm font-medium text-white block mb-1">Nombre Completo <span className="text-primary">*</span></label>
+                  <input 
+                    name="nombre"
+                    value={formData.nombre}
+                    onChange={handleInputChange}
+                    className="w-full rounded bg-black/60 border border-white/10 px-4 py-2.5 text-sm text-white outline-none focus:border-primary placeholder-gray-400" 
+                    placeholder="Tu nombre" 
+                    required 
+                    autoFocus 
+                  />
                 </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-white block mb-1">Tiempo del Proyecto</label>
-                <div className="relative">
-                  <select
-                    className="w-full rounded bg-black/60 border border-white/10 px-4 py-2.5 text-sm text-white outline-none pr-10 appearance-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-gray-400 transition-colors"
-                  >
-                    <option className='bg-black/90 text-white' value="">Selecciona una opción</option>
-                    {tiempos.map((t) => <option className='bg-black/90 text-white' key={t} value={t}>{t}</option>)}
-                  </select>
-                  <svg className="pointer-events-none w-4 h-4 text-primary absolute top-1/2 right-4 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                <div>
+                  <label className="text-sm font-medium text-white block mb-1">Email <span className="text-primary">*</span></label>
+                  <input 
+                    type="email" 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full rounded bg-black/60 border border-white/10 px-4 py-2.5 text-sm text-white outline-none focus:border-primary placeholder-gray-400" 
+                    placeholder="email@ejemplo.com" 
+                    required 
+                  />
                 </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-white block mb-1">Contanos sobre tu proyecto <span className="text-primary">*</span></label>
-                <textarea className="w-full min-h-[80px] rounded bg-black/60 border border-white/10 px-4 py-2.5 text-sm text-white outline-none focus:border-primary placeholder-gray-400 resize-y" placeholder="Describe tu proyecto, objetivos y cualquier requisito o contexto especifico..." required />
-              </div>
-              <button type="submit" className="flex gap-2 items-center text-center mt-4 w-full justify-center bg-primary/90 hover:bg-primary text-black py-3 rounded font-semibold text-base transition-colors">
-                <Send className="w-5 h-5" /> Enviar Mensaje
-              </button>
-            </form>
+                <div>
+                  <label className="text-sm font-medium text-white block mb-1">Empresa</label>
+                  <input 
+                    type="text" 
+                    name="empresa"
+                    value={formData.empresa}
+                    onChange={handleInputChange}
+                    className="w-full rounded bg-black/60 border border-white/10 px-4 py-2.5 text-sm text-white outline-none focus:border-primary placeholder-gray-400" 
+                    placeholder="Tu empresa" 
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-white block mb-1">Tipo de Proyecto <span className="text-primary">*</span></label>
+                  <div className="relative">
+                    <select
+                      name="tipoProyecto"
+                      value={formData.tipoProyecto}
+                      onChange={handleInputChange}
+                      className="w-full rounded bg-black/60 border border-white/10 px-4 py-2.5 text-sm text-white outline-none pr-10 appearance-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-gray-400 transition-colors"
+                      required
+                    >
+                      <option className='bg-black/90 text-white' value="">Selecciona una opción</option>
+                      {proyectos.map(p => <option className='bg-black/90 text-white' key={p} value={p}>{p}</option>)}
+                    </select>
+                    {/* Flecha custom */}
+                    <svg className="pointer-events-none w-4 h-4 text-primary absolute top-1/2 right-4 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-white block mb-1">Tiempo del Proyecto</label>
+                  <div className="relative">
+                    <select
+                      name="tiempoProyecto"
+                      value={formData.tiempoProyecto}
+                      onChange={handleInputChange}
+                      className="w-full rounded bg-black/60 border border-white/10 px-4 py-2.5 text-sm text-white outline-none pr-10 appearance-none focus:border-primary focus:ring-1 focus:ring-primary placeholder-gray-400 transition-colors"
+                    >
+                      <option className='bg-black/90 text-white' value="">Selecciona una opción</option>
+                      {tiempos.map((t) => <option className='bg-black/90 text-white' key={t} value={t}>{t}</option>)}
+                    </select>
+                    <svg className="pointer-events-none w-4 h-4 text-primary absolute top-1/2 right-4 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-white block mb-1">Contanos sobre tu proyecto <span className="text-primary">*</span></label>
+                  <textarea 
+                    name="mensaje"
+                    value={formData.mensaje}
+                    onChange={handleInputChange}
+                    className="w-full min-h-[80px] rounded bg-black/60 border border-white/10 px-4 py-2.5 text-sm text-white outline-none focus:border-primary placeholder-gray-400 resize-y" 
+                    placeholder="Describe tu proyecto, objetivos y cualquier requisito o contexto especifico..." 
+                    required 
+                  />
+                </div>
+                {submitStatus === 'error' && (
+                  <div className="bg-red-500/20 border border-red-500/50 rounded p-3 text-sm text-red-300">
+                    Error al enviar el mensaje. Por favor, intenta nuevamente o contáctanos directamente por email.
+                  </div>
+                )}
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting}
+                  className="flex gap-2 items-center text-center mt-4 w-full justify-center text-white py-3 rounded font-semibold text-base transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ 
+                    background: isSubmitting 
+                      ? 'linear-gradient(135deg, #cc00cc 0%, #990099 100%)'
+                      : 'linear-gradient(135deg, #ff00ff 0%, #cc00cc 100%)',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSubmitting) {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #ff00ff 0%, #cc00cc 100%)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 0, 255, 0.3)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSubmitting) {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #ff00ff 0%, #cc00cc 100%)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }
+                  }}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" /> Enviando...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5" /> Enviar Mensaje
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       )}
@@ -209,12 +373,23 @@ export default function Contact() {
         </div>
       </div>
       <div className="bg-black/70 border border-white/10 rounded-xl py-10 px-6 text-center mb-10 flex flex-col items-center">
-        <Calendar className="mx-auto w-12 h-12 text-primary mb-4" />
+        <Calendar className="mx-auto w-12 h-12 mb-4" style={{ color: '#ff00ff' }} />
         <div className="text-lg md:text-xl font-semibold text-white mb-2">¿Prefieres hablar directamente?</div>
         <div className="text-gray-300 mb-5">Agenda una videollamada de 30 minutos para discutir tu proyecto en detalle.</div>
         <button
           onClick={() => setShowForm(true)}
-          className="px-6 py-3 bg-primary/90 text-black rounded font-semibold text-sm hover:bg-primary transition-colors flex items-center gap-2 justify-center"
+          className="px-6 py-3 rounded font-semibold text-sm transition-colors flex items-center gap-2 justify-center text-white"
+          style={{ 
+            background: 'linear-gradient(135deg, #ff00ff 0%, #cc00cc 100%)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, #ff00ff 0%, #cc00cc 100%)';
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 0, 255, 0.3)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'linear-gradient(135deg, #ff00ff 0%, #cc00cc 100%)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
         >
           <Send className="w-5 h-5" /> Agendar reunión gratuita
         </button>

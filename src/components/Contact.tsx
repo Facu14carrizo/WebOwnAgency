@@ -127,9 +127,22 @@ export default function Contact() {
       const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
+      // Debug: verificar variables en desarrollo
+      if (import.meta.env.DEV) {
+        console.log('EmailJS Config:', {
+          serviceId: serviceId ? '✓' : '✗',
+          templateId: templateId ? '✓' : '✗',
+          publicKey: publicKey ? '✓' : '✗',
+        });
+      }
+
       // Validar que las credenciales estén configuradas
       if (!serviceId || !templateId || !publicKey) {
-        throw new Error('Las credenciales de EmailJS no están configuradas correctamente');
+        const missing = [];
+        if (!serviceId) missing.push('VITE_EMAILJS_SERVICE_ID');
+        if (!templateId) missing.push('VITE_EMAILJS_TEMPLATE_ID');
+        if (!publicKey) missing.push('VITE_EMAILJS_PUBLIC_KEY');
+        throw new Error(`Las credenciales de EmailJS no están configuradas. Faltan: ${missing.join(', ')}`);
       }
 
       // Preparar los parámetros del template

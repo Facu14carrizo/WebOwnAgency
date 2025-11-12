@@ -103,17 +103,14 @@ export default function Navigation() {
             </ul>
           </div>
 
-          {/* Botón hamburguesa móvil */}
+          {/* Botón hamburguesa móvil - solo visible en mobile */}
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="md:hidden text-white p-2 hover:text-primary transition-colors absolute right-0"
+            className="md:hidden text-white p-2 hover:text-primary transition-colors absolute right-0 flex items-center justify-center"
             aria-label="Abrir menú"
             style={{
               minWidth: '44px',
               minHeight: '44px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
               top: 'calc(50% + 10px)',
               transform: 'translateY(-50%)',
             }}

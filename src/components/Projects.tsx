@@ -204,22 +204,20 @@ export default function Projects() {
                   loop
                   muted
                   playsInline
-                  preload="metadata"
+                  preload="none"
                   onError={e => {
+                    // Silenciar el error en consola - el video simplemente no se mostrará
                     e.currentTarget.style.display = 'none';
-                    const msg = document.createElement('div');
-                    msg.innerHTML = `<span style='color:white;'>No se puede cargar el video:<br/><b>/Demos/${project.video}</b></span>`;
-                    msg.className = 'absolute inset-0 flex items-center justify-center text-white text-center bg-black/70 font-bold';
-                    e.currentTarget.parentNode?.appendChild(msg);
-                    // Debug link para abrir en otra pestaña
-                    const a = document.createElement('a');
-                    a.href = `/Demos/${project.video}`;
-                    a.innerText = `/Demos/${project.video}`;
-                    a.target = '_blank';
-                    a.style.color = '#88ffee';
-                    a.style.display = 'block';
-                    a.style.fontSize = '1.1em';
-                    msg.appendChild(a);
+                    const parent = e.currentTarget.parentElement;
+                    if (parent && !parent.querySelector('.video-error-message')) {
+                      const msg = document.createElement('div');
+                      msg.className = 'video-error-message absolute inset-0 flex items-center justify-center text-white text-center bg-black/70 font-bold';
+                      msg.innerHTML = `<span>Video no disponible</span>`;
+                      parent.appendChild(msg);
+                    }
+                  }}
+                  onLoadStart={() => {
+                    // Intentar cargar el video silenciosamente
                   }}
                 />
                 {/* Video con object-contain (se muestra completo al hover) */}
@@ -230,7 +228,11 @@ export default function Projects() {
                   loop
                   muted
                   playsInline
-                  preload="metadata"
+                  preload="none"
+                  onError={(e) => {
+                    // Silenciar error - el video simplemente no se mostrará
+                    e.currentTarget.style.display = 'none';
+                  }}
                 />
               </div>
               {/* Overlay con información del proyecto */}

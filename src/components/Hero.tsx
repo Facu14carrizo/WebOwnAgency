@@ -71,7 +71,7 @@ export default function Hero() {
           ref={subtitleRef}
           className="text-base sm:text-lg md:text-xl text-gray-400 mb-6 sm:mb-8 md:mb-12 px-4"
         >
-          Diseño innovador y desarrollo web de vanguardia
+          Diseño y desarrollo web innovador y de alto valor
         </p>
         <a
           ref={ctaRef}

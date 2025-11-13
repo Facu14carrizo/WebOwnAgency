@@ -53,7 +53,7 @@ export default function Navigation() {
 
   const menuItems = [
     { label: 'Inicio', id: 'home' },
-    { label: 'Sobre Nosotros', id: 'about' },
+    { label: 'Studio', id: 'about' },
     { label: 'Servicios', id: 'servicios' },
     { label: 'Proyectos', id: 'projects' },
     { label: 'Contacto', id: 'contacto' },

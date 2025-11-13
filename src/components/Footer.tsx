@@ -1,55 +1,49 @@
 import { Instagram, Linkedin } from 'lucide-react';
 
-type XLogoProps = {
-  className?: string;
-};
-
-const XLogo = ({ className = 'w-5 h-5' }: XLogoProps) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="currentColor"
-    className={className}
-    aria-hidden="true"
-  >
-    <path d="M22.162 0H18.06l-6.99 9.51L4.66 0H0l8.15 12.045L.2 24h4.15l6.49-8.67L17.33 24h4.66l-8.6-12.45L22.162 0z" />
-  </svg>
-);
-
 export default function Footer() {
   return (
-    <footer className="relative z-10 py-12 px-8 md:px-16 border-t border-white/10">
-      <div className="flex flex-col gap-12">
-        <div className="flex w-full flex-col items-center gap-4 text-gray-200 text-sm md:-mt-2">
-          <div className="grid w-full max-w-3xl grid-cols-1 gap-6 text-center md:grid-cols-3 md:text-left">
-            <div className="flex flex-col items-center gap-2 md:items-start">
-              <h4 className="font-semibold uppercase tracking-wide text-gray-300">Nosotros</h4>
-              <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
-                Inicio
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
-                Sobre Nosotros
-              </a>
-            </div>
-            <div className="flex flex-col items-center gap-2 md:items-start">
-              <h4 className="font-semibold uppercase tracking-wide text-gray-300">Explorá</h4>
-              <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
-                Servicios
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
-                Proyectos
-              </a>
-            </div>
-            <div className="flex flex-col items-center gap-2 md:items-start">
-              <h4 className="font-semibold uppercase tracking-wide text-gray-300">Conectemos</h4>
-              <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
-                Contacto
-              </a>
+    <footer className="relative z-10 flex flex-col pt-12 pb-4 px-8 md:px-16 border-t border-white/10">
+      <div className="flex flex-col gap-12 md:gap-14 flex-1">
+        <div className="flex flex-col gap-6 md:flex-row md:items-center">
+          <div className="flex w-full flex-col items-center gap-2 text-center text-gray-100 md:w-1/2 md:text-center">
+            <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent tracking-tight">
+              WaveFrame
+            </span>
+            <span className="text-xs md:text-sm text-gray-400 uppercase tracking-[0.35em]">
+              Creamos Experiencias Digitales
+            </span>
+          </div>
+          <div className="flex w-full flex-col items-center gap-4 text-gray-200 text-sm md:w-1/2 md:items-center md:justify-center md:pl-6">
+            <div className="grid w-full max-w-xl grid-cols-1 gap-5 text-center md:grid-cols-3 md:text-left">
+              <div className="flex flex-col items-center gap-1.5 md:items-start">
+                <h4 className="font-semibold uppercase tracking-wide text-gray-300">Nosotros</h4>
+                <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
+                  Inicio
+                </a>
+                <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
+                  Studio
+                </a>
+              </div>
+              <div className="flex flex-col items-center gap-1.5 md:items-start">
+                <h4 className="font-semibold uppercase tracking-wide text-gray-300">Explorá</h4>
+                <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
+                  Servicios
+                </a>
+                <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
+                  Proyectos
+                </a>
+              </div>
+              <div className="flex flex-col items-center gap-1.5 md:items-start">
+                <h4 className="font-semibold uppercase tracking-wide text-gray-300">Conectemos</h4>
+                <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
+                  Contacto
+                </a>
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4 text-gray-400 text-sm md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-wrap items-center justify-center gap-6 md:justify-start">
+        <div className="mt-auto flex flex-col gap-6 text-gray-400 text-sm md:flex-row md:items-center">
+          <div className="flex w-full flex-wrap items-center justify-center gap-6 md:w-1/2 md:justify-center">
             <span>&copy; 2025 Todos los derechos reservados.</span>
             <a href="#" className="hover:text-primary transition-colors duration-300">
               Privacidad
@@ -58,17 +52,19 @@ export default function Footer() {
               Legales
             </a>
           </div>
-          <div className="flex items-center justify-center gap-4 md:justify-end">
-            <span className="uppercase tracking-wide text-gray-400">Siguenos</span>
-            <a href="#" className="transition-transform duration-300 hover:-translate-y-0.5 hover:text-primary">
-              <XLogo className="w-4 h-4" />
-            </a>
-            <a href="#" className="transition-transform duration-300 hover:-translate-y-0.5 hover:text-primary">
-              <Instagram className="w-4 h-4" />
-            </a>
-            <a href="#" className="transition-transform duration-300 hover:-translate-y-0.5 hover:text-primary">
-              <Linkedin className="w-4 h-4" />
-            </a>
+          <div className="flex w-full flex-col items-center gap-3 md:w-1/2 md:items-center">
+            <span className="text-xs uppercase tracking-[0.35em] text-gray-500 text-center">
+              Diseño y desarrollo web innovador y de alto valor.
+            </span>
+            <div className="flex items-center justify-center gap-4">
+              <span className="uppercase tracking-wide text-gray-400">Siguenos</span>
+              <a href="#" className="transition-transform duration-300 hover:-translate-y-0.5 hover:text-primary">
+                <Instagram className="w-4 h-4" />
+              </a>
+              <a href="#" className="transition-transform duration-300 hover:-translate-y-0.5 hover:text-primary">
+                <Linkedin className="w-4 h-4" />
+              </a>
+            </div>
           </div>
         </div>
       </div>

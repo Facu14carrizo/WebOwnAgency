@@ -239,7 +239,6 @@ export default function Servicios() {
           <h2 className="text-4xl md:text-5xl font-bold text-center">
             <span style={{ color: '#00ff88' }}>Nuestros</span> Servicios
           </h2>
-          <div className="after:absolute after:content-[''] after:w-24 after:h-1 after:bg-primary after:rounded-lg after:mx-auto after:left-1/2 after:-translate-x-1/2 after:top-full after:mt-3" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
           {servicios.map((serv, i) => (

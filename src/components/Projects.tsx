@@ -180,7 +180,6 @@ export default function Projects() {
           >
             <span style={{ color: '#00ff88' }}>Proyectos</span> Destacados
           </h2>
-          <div className="after:absolute after:content-[''] after:w-24 after:h-1 after:bg-primary after:rounded-lg after:mx-auto after:left-1/2 after:-translate-x-1/2 after:top-full after:mt-3" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((project, index) => (

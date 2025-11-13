@@ -10,12 +10,12 @@ export default function CustomCursor() {
     if (!cursor || !follower) return;
 
     const moveCursor = (e: MouseEvent) => {
-      cursor.style.left = `${e.clientX - 10}px`;
-      cursor.style.top = `${e.clientY - 10}px`;
+      cursor.style.left = `${e.clientX - 6}px`;
+      cursor.style.top = `${e.clientY - 6}px`;
 
       setTimeout(() => {
-        follower.style.left = `${e.clientX - 20}px`;
-        follower.style.top = `${e.clientY - 20}px`;
+        follower.style.left = `${e.clientX - 14}px`;
+        follower.style.top = `${e.clientY - 14}px`;
       }, 100);
     };
 
@@ -43,11 +43,15 @@ export default function CustomCursor() {
     <>
       <div
         ref={cursorRef}
-        className="fixed w-5 h-5 border-2 border-primary rounded-full pointer-events-none z-[9999] transition-transform duration-100 mix-blend-difference hidden md:block"
-      />
+        className="fixed w-3 h-3 border border-primary/80 rounded-full pointer-events-none z-[9999] transition-transform duration-100 mix-blend-difference hidden md:block"
+      >
+        <span className="absolute inset-0 flex items-center justify-center">
+          <span className="block h-1.5 w-1.5 rounded-full bg-primary/90 blur-[2px]" />
+        </span>
+      </div>
       <div
         ref={followerRef}
-        className="fixed w-10 h-10 bg-primary/10 rounded-full pointer-events-none z-[9998] transition-transform duration-300 hidden md:block"
+        className="fixed w-7 h-7 bg-primary/8 rounded-full pointer-events-none z-[9998] transition-transform duration-300 hidden md:block"
       />
     </>
   );

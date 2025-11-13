@@ -17,26 +17,46 @@ export default function Footer() {
             <div className="grid w-full max-w-xl grid-cols-1 gap-5 text-center md:grid-cols-3 md:text-left">
               <div className="flex flex-col items-center gap-1.5 md:items-start">
                 <h4 className="font-semibold uppercase tracking-wide text-gray-300">Nosotros</h4>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
+                <a
+                  href="#"
+                  className="group relative text-gray-400"
+                >
                   Inicio
+                  <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
+                <a
+                  href="#"
+                  className="group relative text-gray-400"
+                >
                   Studio
+                  <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
                 </a>
               </div>
               <div className="flex flex-col items-center gap-1.5 md:items-start">
                 <h4 className="font-semibold uppercase tracking-wide text-gray-300">Explorá</h4>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
+                <a
+                  href="#"
+                  className="group relative text-gray-400"
+                >
                   Servicios
+                  <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
                 </a>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
+                <a
+                  href="#"
+                  className="group relative text-gray-400"
+                >
                   Proyectos
+                  <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
                 </a>
               </div>
               <div className="flex flex-col items-center gap-1.5 md:items-start">
                 <h4 className="font-semibold uppercase tracking-wide text-gray-300">Conectemos</h4>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors duration-300">
+                <a
+                  href="#"
+                  className="group relative text-gray-400"
+                >
                   Contacto
+                  <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
                 </a>
               </div>
             </div>
@@ -45,11 +65,19 @@ export default function Footer() {
         <div className="mt-auto flex flex-col gap-6 text-gray-400 text-sm md:flex-row md:items-center">
           <div className="flex w-full flex-wrap items-center justify-center gap-6 md:w-1/2 md:justify-center">
             <span>&copy; 2025 Todos los derechos reservados.</span>
-            <a href="#" className="hover:text-primary transition-colors duration-300">
+            <a
+              href="#"
+              className="group relative"
+            >
               Privacidad
+              <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
             </a>
-            <a href="#" className="hover:text-primary transition-colors duration-300">
+            <a
+              href="#"
+              className="group relative"
+            >
               Legales
+              <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
             </a>
           </div>
           <div className="flex w-full flex-col items-center gap-3 md:w-1/2 md:items-center">

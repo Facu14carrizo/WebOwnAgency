@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import CustomCursor from './components/CustomCursor';
 import LoadingScreen from './components/LoadingScreen';
 import Navigation from './components/Navigation';
@@ -14,6 +14,7 @@ import Privacy from './components/Privacy';
 import Legales from './components/Legales';
 
 function HomePage() {
+  const location = useLocation();
   useEffect(() => {
     const scrollToPending = () => {
       const pending = localStorage.getItem('scrollTarget');
@@ -28,7 +29,7 @@ function HomePage() {
       }
     };
     scrollToPending();
-  }, []);
+  }, [location.pathname]);
 
   return (
     <>

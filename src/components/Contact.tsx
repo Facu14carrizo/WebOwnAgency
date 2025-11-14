@@ -46,6 +46,7 @@ export default function Contact() {
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const overlayRef = useRef(null);
   const formRef = useRef<HTMLFormElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     if (showForm) {
@@ -76,10 +77,10 @@ export default function Contact() {
           duration: 1.15,
           ease: 'elastic.out(1, 0.58)',
         });
-        // Animación de hijos escalonada
+        // Animación de hijos escalonada (excluyendo el botón submit para mantener su estilo)
         const childs = gsap.utils.toArray(
           (sidebarRef.current as HTMLDivElement).querySelectorAll(
-            'h2, form > *, form > * > *, form > * label, form > * input, form > * select, form > * textarea, form > * button'
+            'h2, form > *, form > * > *, form > * label, form > * input, form > * select, form > * textarea'
           )
         );
         gsap.from(childs, {
@@ -91,8 +92,22 @@ export default function Contact() {
           duration: 0.55,
           delay: 0.18,
           ease: 'power3.out',
-          clearProps: 'all',
+          clearProps: 'filter,blur',
         });
+        // Animar el botón submit por separado sin limpiar su background
+        const submitButton = (sidebarRef.current as HTMLDivElement)?.querySelector('button[type="submit"]') as HTMLButtonElement;
+        if (submitButton) {
+          gsap.from(submitButton, {
+            y: 40,
+            opacity: 0,
+            scale: 0.94,
+            filter: 'blur(10px)',
+            duration: 0.55,
+            delay: 0.18 + (childs.length * 0.08),
+            ease: 'power3.out',
+            clearProps: 'filter,blur,y,opacity,scale',
+          });
+        }
       }
     } else {
       // Reset form cuando se cierra
@@ -105,6 +120,26 @@ export default function Contact() {
         mensaje: ''
       });
       setSubmitStatus('idle');
+    }
+  }, [showForm]);
+
+  const handleClose = () => {
+    setShowForm(false);
+  };
+
+  // Asegurar que el botón de cerrar funcione
+  useEffect(() => {
+    if (showForm && closeButtonRef.current) {
+      const button = closeButtonRef.current;
+      const handleClick = (e: MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setShowForm(false);
+      };
+      button.addEventListener('click', handleClick);
+      return () => {
+        button.removeEventListener('click', handleClick);
+      };
     }
   }, [showForm]);
 
@@ -187,15 +222,19 @@ export default function Contact() {
           {/* Sidebar - full width en móvil, ancho fijo en desktop */}
           <div ref={sidebarRef} className="w-full md:w-[430px] md:max-w-md h-screen pt-20 md:pt-16 bg-[#15181b] md:border-l border-white/10 shadow-2xl pb-8 px-4 sm:px-7 relative overflow-y-auto">
             <button 
-              className="md:hidden fixed top-4 right-4 text-white hover:text-primary bg-white/10 hover:bg-white/20 p-3 rounded-lg transition-colors z-[10000] active:scale-95 touch-manipulation" 
-              onClick={() => setShowForm(false)}
+              ref={closeButtonRef}
+              className="absolute top-4 right-4 text-white hover:text-primary bg-white/10 hover:bg-white/20 p-3 rounded-lg transition-colors z-[99999] active:scale-95 cursor-pointer"
+              onClick={handleClose}
               aria-label="Cerrar formulario"
+              type="button"
               style={{
                 minWidth: '44px',
                 minHeight: '44px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                position: 'absolute',
+                zIndex: 99999,
               }}
             >
               <X className="w-6 h-6" strokeWidth={2.5} />

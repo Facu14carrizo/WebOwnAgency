@@ -1,8 +1,8 @@
 export default function Privacy() {
   return (
     <div className="min-h-screen bg-dark text-white relative">
-      {/* Fondo con blur - solo cubre el contenido de esta página */}
-      <div className="absolute inset-0 bg-dark/30 backdrop-blur-sm pointer-events-none" style={{ minHeight: '100vh' }}></div>
+      {/* Fondo con blur muy sutil */}
+      <div className="absolute inset-0 backdrop-blur pointer-events-none" style={{ minHeight: '100vh' }}></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-8 md:px-16 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">

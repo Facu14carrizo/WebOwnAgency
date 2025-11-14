@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CustomCursor from './components/CustomCursor';
 import LoadingScreen from './components/LoadingScreen';
@@ -11,8 +11,25 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ScrollParticles from './components/ScrollParticles';
 import Privacy from './components/Privacy';
+import Legales from './components/Legales';
 
 function HomePage() {
+  useEffect(() => {
+    const scrollToPending = () => {
+      const pending = localStorage.getItem('scrollTarget');
+      if (pending) {
+        const el = document.getElementById(pending);
+        if (el) {
+          setTimeout(() => {
+            el.scrollIntoView({ behavior: 'smooth' });
+          }, 150);
+        }
+        localStorage.removeItem('scrollTarget');
+      }
+    };
+    scrollToPending();
+  }, []);
+
   return (
     <>
       <main className="relative z-10">
@@ -41,6 +58,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/privacidad" element={<Privacy />} />
+            <Route path="/legales" element={<Legales />} />
           </Routes>
           <Footer />
         </>

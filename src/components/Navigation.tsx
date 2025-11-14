@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,11 +41,18 @@ export default function Navigation() {
     };
   }, [isMobileMenuOpen]);
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false); // Cerrar menú móvil después de hacer clic
+  // Nueva función universal para scroll y navegación:
+  const navToSection = (id: string) => {
+    if (location.pathname !== '/') {
+      localStorage.setItem('scrollTarget', id);
+      navigate('/');
+      setIsMobileMenuOpen(false);
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        setIsMobileMenuOpen(false);
+      }
     }
   };
 
@@ -92,7 +102,7 @@ export default function Navigation() {
               {menuItems.map((item) => (
                 <li key={item.id}>
                   <button
-                    onClick={() => scrollToSection(item.id)}
+                    onClick={() => navToSection(item.id)}
                     className="text-white text-sm tracking-wider transition-colors duration-300 relative group"
                   >
                     {item.label}
@@ -149,7 +159,7 @@ export default function Navigation() {
               {menuItems.map((item) => (
                 <li key={item.id}>
                   <button
-                    onClick={() => scrollToSection(item.id)}
+                    onClick={() => navToSection(item.id)}
                     className="w-full text-left text-white py-4 px-4 rounded-lg hover:bg-white/10 hover:text-primary active:bg-white/20 transition-all duration-300 text-lg"
                   >
                     {item.label}

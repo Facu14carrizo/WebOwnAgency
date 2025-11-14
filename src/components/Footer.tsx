@@ -1,7 +1,21 @@
 import { Instagram, Linkedin } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 export default function Footer() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const navToSection = (id: string) => {
+    if (location.pathname !== '/') {
+      localStorage.setItem('scrollTarget', id);
+      navigate('/');
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <footer className="relative z-[1] flex flex-col pt-12 pb-4 px-8 md:px-16 border-t border-white/10">
       <div className="flex flex-col gap-12 md:gap-14 flex-1">
@@ -19,15 +33,15 @@ export default function Footer() {
               <div className="flex flex-col items-center gap-1.5 md:items-start">
                 <h4 className="font-semibold uppercase tracking-wide text-gray-300">Nosotros</h4>
                 <a
-                  href="#"
-                  className="group relative text-gray-400"
+                  onClick={() => navToSection('inicio')}
+                  className="group relative text-gray-400 cursor-pointer"
                 >
                   Inicio
                   <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
                 </a>
                 <a
-                  href="#"
-                  className="group relative text-gray-400"
+                  onClick={() => navToSection('studio')}
+                  className="group relative text-gray-400 cursor-pointer"
                 >
                   Studio
                   <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
@@ -36,15 +50,15 @@ export default function Footer() {
               <div className="flex flex-col items-center gap-1.5 md:items-start">
                 <h4 className="font-semibold uppercase tracking-wide text-gray-300">Explorá</h4>
                 <a
-                  href="#"
-                  className="group relative text-gray-400"
+                  onClick={() => navToSection('servicios')}
+                  className="group relative text-gray-400 cursor-pointer"
                 >
                   Servicios
                   <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
                 </a>
                 <a
-                  href="#"
-                  className="group relative text-gray-400"
+                  onClick={() => navToSection('proyectos')}
+                  className="group relative text-gray-400 cursor-pointer"
                 >
                   Proyectos
                   <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
@@ -53,8 +67,8 @@ export default function Footer() {
               <div className="flex flex-col items-center gap-1.5 md:items-start">
                 <h4 className="font-semibold uppercase tracking-wide text-gray-300">Conectemos</h4>
                 <a
-                  href="#"
-                  className="group relative text-gray-400"
+                  onClick={() => navToSection('contacto')}
+                  className="group relative text-gray-400 cursor-pointer"
                 >
                   Contacto
                   <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
@@ -73,13 +87,13 @@ export default function Footer() {
               Privacidad
               <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
             </Link>
-            <a
-              href="#"
+            <Link
+              to="/legales"
               className="group relative"
             >
               Legales
               <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
-            </a>
+            </Link>
           </div>
           <div className="flex w-full flex-col items-center gap-3 md:w-1/2 md:items-center">
             <span className="text-xs uppercase tracking-[0.35em] text-gray-500 text-center">

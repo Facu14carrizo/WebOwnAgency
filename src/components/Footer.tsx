@@ -1,4 +1,5 @@
 import { Instagram, Linkedin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
@@ -65,13 +66,13 @@ export default function Footer() {
         <div className="mt-auto flex flex-col gap-6 text-gray-400 text-sm md:flex-row md:items-center">
           <div className="flex w-full flex-wrap items-center justify-center gap-6 md:w-1/2 md:justify-center">
             <span>&copy; 2025 Todos los derechos reservados.</span>
-            <a
-              href="#"
+            <Link
+              to="/privacidad"
               className="group relative"
             >
               Privacidad
               <span className="pointer-events-none absolute bottom-[-6px] left-0 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full" />
-            </a>
+            </Link>
             <a
               href="#"
               className="group relative"

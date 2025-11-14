@@ -2,7 +2,7 @@ import { Instagram, Linkedin } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="relative z-10 flex flex-col pt-12 pb-4 px-8 md:px-16 border-t border-white/10">
+    <footer className="relative z-[1] flex flex-col pt-12 pb-4 px-8 md:px-16 border-t border-white/10">
       <div className="flex flex-col gap-12 md:gap-14 flex-1">
         <div className="flex flex-col gap-6 md:flex-row md:items-center">
           <div className="flex w-full flex-col items-center gap-2 text-center text-gray-100 md:w-1/2 md:text-center">
